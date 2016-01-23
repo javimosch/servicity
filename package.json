@@ -1,0 +1,46 @@
+{
+  "name": "fdev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babelify": "^7.2.0",
+    "browser-sync": "^2.11.1",
+    "browserify": "^13.0.0",
+    "exorcist": "^0.4.0",
+    "gulp": "^3.9.0",
+    "gulp-clean": "^0.3.1",
+    "gulp-if": "^2.0.0",
+    "gulp-minify": "0.0.5",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.1.1",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.5.1",
+    "gulp-util": "^3.0.7",
+    "gulp-watch": "^4.3.5",
+    "run-sequence": "^1.1.5",
+    "uglify": "^0.1.5",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
+  },
+  "dependencies": {
+    "angular": "^1.5.0-rc.1",
+    "angular-formly": "^7.5.0",
+    "angular-formly-templates-bootstrap": "^6.2.0",
+    "angular-messages": "^1.4.9",
+    "angular-resource": "^1.4.9",
+    "angular-ui-bootstrap": "^1.1.0",
+    "angular-ui-router": "^0.2.15",
+    "api-check": "^7.5.5",
+    "bootstrap": "^3.3.6",
+    "bootstrap-sass": "^3.3.6",
+    "jquery": "^2.2.0",
+    "lodash": "^4.0.0",
+    "parse": "^1.6.14"
+  }
+}

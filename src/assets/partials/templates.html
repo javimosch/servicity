@@ -1,0 +1,17 @@
+<!-- Put custom templates here -->
+<script type="text/ng-template" id="validation.html">
+    <div ng-message="required">This field is required</div>
+    <div ng-message="minlength">Too short</div>
+    <div ng-message="maxlength">Too long</div>
+    <div ng-message="email">Invalid email address</div>
+</script>
+
+<script type="text/ng-template" id="input-template.html">
+    <input type="{{options.templateOptions.type || 'text'}}" class="form-control" id="{{id}}" formly-dynamic-name="id" formly-custom-validation="options.validators"
+    placeholder="{{options.templateOptions.placeholder}}" aria-describedby="{{id}}_description" ng-required="options.templateOptions.required"
+    ng-disabled="options.templateOptions.disabled" ng-model="model[options.key]">
+</script>
+<script type="text/ng-template" id="checkbox-template.html">
+    <input type="checkbox" id="{{id}}" formly-dynamic-name="id" formly-custom-validation="options.validators" aria-describedby="{{id}}_description"
+    ng-required="options.templateOptions.required" ng-disabled="options.templateOptions.disabled" ng-model="model[options.key]"> {{options.templateOptions.label || 'Checkbox'}} {{options.templateOptions.required ? '*' : ''}}
+</script>

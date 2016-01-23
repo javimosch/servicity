@@ -1,0 +1,31 @@
+<div class="panel panel-default" ng-controller="servicesCtrl as c">
+    <!-- Default panel contents -->
+    <div class="panel-heading">Servicios</div>
+    <div class="panel-body">
+         <div class="btn-group" role="group" aria-label="...">
+            <button ng-click="c.onNew()" type="button" class="btn btn-default">New</button>
+            <button ng-click="c.onDelete()" type="button" class="btn btn-default">Delete</button>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <table class="table">
+        <tr>
+            <th>Description</th>
+            <th>Price</th>
+        </tr>
+
+        <tr ng-repeat="model in collection" ng-click="onItemTap(model)">
+            <td ng-hide="true">
+                {{model.id}}
+            </td>
+            <td>
+                {{model.description}}
+            </td>
+            <td>
+                {{model.price}}
+            </td>
+        </tr>
+        
+  </table>
+</div>

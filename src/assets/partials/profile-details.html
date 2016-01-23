@@ -1,0 +1,13 @@
+<form ng-controller="profileDetails as vm" name="vm.form" novalidate>
+    <formly-form model="vm.model" fields="vm.fields" options="vm.options" form="vm.form"></formly-form>
+      
+      <uib-alert type="warning" >{{state.warning}}</uib-alert>
+      <uib-alert type="success" ng-hide="!state.success">{{state.success}}</uib-alert>
+      
+      
+      
+    <button 
+        ng-disabled="vm.form.$invalid || !vm.changed()" 
+        ng-click="vm.save()" 
+        type="button" class="btn btn-default">Save</button>
+</form>

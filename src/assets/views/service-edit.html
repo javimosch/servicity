@@ -1,0 +1,16 @@
+<div class="panel panel-default" ng-controller="serviceEditCtrl as vm">
+    <div class="panel-heading">Servicio {{vm.model.description}}</div>
+    <div class="panel-body">
+        <div class="btn-group" role="group" aria-label="...">
+            <button ng-disabled="!unsaved()" ng-click="onSave()" type="button" class="btn btn-default">Save</button>
+            <button ng-disabled="unsaved()" ng-click="onDelete()" type="button" class="btn btn-default">Delete</button>
+            <button ng-click="onReturnClick()" type="button" class="btn btn-default">{{getReturnLabel()}}</button>
+        </div>
+    </div>
+    <form name="vm.form" ng-submit="vm.onSubmit()" novalidate>
+        <formly-form model="vm.model" fields="vm.fields"></formly-form>
+
+        
+
+    </form>
+</div>
