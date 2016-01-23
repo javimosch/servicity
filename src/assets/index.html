@@ -7,14 +7,12 @@
     <link rel="stylesheet" href="app.css">
 </head>
 
-<body ng-controller='appCtrl'>
-    
+<body ng-controller='main'>
+    <div ng-include="'partials/templates.html'"></div>
     <div ng-include="'partials/header.html'"></div>
     
     <section ui-view></section>
-    
-    <div ng-include="'partials/templates.html'"></div>
-    
+
     <script src="vendor.js"></script>
     <script src="app.js"></script>
 </body>

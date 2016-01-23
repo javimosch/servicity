@@ -1,4 +1,4 @@
-<div class="panel panel-default" ng-controller="connectCtrl as vm">
+<div class="panel panel-default" ng-controller="connect as vm">
     <div class="panel-heading">Connect</div>
     <form name="vm.form" ng-submit="vm.onSubmit()" novalidate>
         <formly-form model="vm.model" fields="vm.fields"></formly-form>
@@ -13,9 +13,11 @@
     <div class="panel-body">
         <div class="btn-group" role="group" aria-label="...">
             <button
-            ng-disabled="vm.form.$invalid 
+            ng-disabled="vm.form.$invalid"
             ng-click="onLogin()" type="button" class="btn btn-default">Login</button>
-            <button ng-click="onRegister()" type="button" class="btn btn-default">Register</button>
+            <button 
+            ng-disabled="vm.form.$invalid"
+            ng-click="onRegister()" type="button" class="btn btn-default">Register</button>
         </div>
     </div>
 </div>

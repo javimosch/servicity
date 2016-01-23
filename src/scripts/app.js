@@ -1,26 +1,24 @@
 /* global angular */
 
-var routeConfiguration = require('./configs/config-angular').routeConfiguration;
-
-var serviceCtrl = require('./ctrls/serviceCtrl').mainCtrl;
-var serviceEditCtrl = require('./ctrls/serviceCtrl').editCtrl;
-var servicesCtrl = require('./ctrls/serviceCtrl').listCtrl;
-var connectCtrl = require('./ctrls/connectCtrl').ctrl;
-var configureProfileModule = require('./ctrls/profile-ctrl').configure;
+var configureAngular = require('./configs/config-angular').configure;
 var configureFormly = require('./configs/config-formly').configure;
-var parseSrv = require('./srvs/parseSrv').Service;
 
-(function () {
-    console.log('app');
-    var app = angular.module('app', ['ngResource', 'ui.router', 'formly', 'formlyBootstrap','ui.bootstrap','ngMessages']);
+var configureAppModule = require('./ctrls/app-common-ctrls').configure;
+var configureServiceModule = require('./ctrls/service-ctrls').configure;
+var configureConnectModule = require('./ctrls/connect-ctrls').configure;
+var configureProfileModule = require('./ctrls/profile-ctrls').configure;
+
+var parse = require('./srvs/parse-service').Service;
+
+var app = angular.module('app', ['ngResource', 'ui.router', 'formly', 'formlyBootstrap', 'ui.bootstrap', 'ngMessages']);
+
+configureAngular(app);//configuration
+configureFormly(app); //configuration
     
-    app.config(routeConfiguration);//configuration
-    configureFormly(app); //configuration
-    configureProfileModule(app);//controller
-    app.service('parseSrv',parseSrv); //service
-    app.controller('appCtrl', require('./ctrls/appCtrl').ctrl); //controller
-    app.controller('serviceCtrl', serviceCtrl);//controller
-    app.controller('serviceEditCtrl', serviceEditCtrl);//controller
-    app.controller('servicesCtrl', servicesCtrl);//controller
-    app.controller('connectCtrl',connectCtrl);//controller
-})();
+configureAppModule(app);//controller
+configureProfileModule(app);//controller
+configureServiceModule(app);//controller
+configureConnectModule(app);//controller
+  
+app.service('parse', parse); //service
+    

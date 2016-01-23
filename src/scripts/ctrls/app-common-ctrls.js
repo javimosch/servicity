@@ -1,15 +1,20 @@
-exports.ctrl = ['$scope', '$rootScope', '$state', 'parseSrv', '$timeout', function ($scope, root, $state, parseSrv, $timeout) {
-    console.log('appCtrl');
+/* global Parse */
+var create = require('../configs/config-angular').createController;
+exports.configure = (app) => {
+    app.controller('main', create(main));
+};
 
-
-
+var main = 
+  function($scope, parse, $stateParams, $timeout, $state, $rootScope){//injects
+    var root = $rootScope;
 
     root.goto = (name, params) => {
+        //console.info('goto ',name,params);
         $state.go(name, params);
     };
 
     root.statusLogged = () => {
-        return parseSrv.Parse.User.current() && parseSrv.Parse.User.current().authenticated();
+        return Parse.User.current() && Parse.User.current().authenticated();
     }
 
     root.state = {
@@ -21,6 +26,7 @@ exports.ctrl = ['$scope', '$rootScope', '$state', 'parseSrv', '$timeout', functi
     root.toggleState = (stateVarName, val, nextVal, timeout) => {
         root.state[stateVarName] = val;
         if(nextVal === undefined && timeout === undefined) return;
+        if(timeout < 500) timeout = 500;
         $timeout(() => { root.$apply(); });
         $timeout(() => {
             nextVal = (nextVal == undefined) ? root.state[stateVarName] : nextVal;
@@ -37,5 +43,9 @@ exports.ctrl = ['$scope', '$rootScope', '$state', 'parseSrv', '$timeout', functi
     root.question = (msg) => {
         return window.confirm(msg);
     };
+    
+    root.currentUser = ()=>{
+      return Parse.User.current()  
+    };
 
-}];
+};

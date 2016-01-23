@@ -1,8 +1,12 @@
+/* global Parse */
 /* global _ */
-
-exports.ctrl = ['$scope', 'parseSrv', '$stateParams', '$timeout', '$state', function ($scope, sparse, $stateParams, $timeout, $state) {
-
-
+var create = require('../configs/config-angular').createController;
+exports.configure=(app)=>{
+    app.controller('connect', create(connect));
+};
+var connect = 
+    function($scope, parse, $stateParams, $timeout, $state, $rootScope){//injects
+    var root = $rootScope;
     var vm = this;
     vm.model = {};
     vm.fields = [
@@ -28,11 +32,15 @@ exports.ctrl = ['$scope', 'parseSrv', '$stateParams', '$timeout', '$state', func
         }
     ];
 
-
+    vm.disconnect=()=>{
+        Parse.User.logOut().then(function(){
+            root.goto('home');
+        });  
+    };
 
     $scope.onLogin = () => {
 //        console.log(vm.model);
-        sparse.Parse.User.logIn(vm.model.email, vm.model.pass).then(function () {
+        Parse.User.logIn(vm.model.email, vm.model.pass).then(function () {
             $state.go('profile', {});
         }).fail(function (a) {
             $scope.warning = a.message;
@@ -42,7 +50,7 @@ exports.ctrl = ['$scope', 'parseSrv', '$stateParams', '$timeout', '$state', func
     };
 
     $scope.onRegister = () => {
-        sparse.Parse.User.signUp(vm.model.email, vm.model.pass).then(function (a, b, c) {
+        Parse.User.signUp(vm.model.email, vm.model.pass).then(function (a, b, c) {
             console.info(a, b, c);
         }).fail(function (a) {
             $scope.warning = a.message;
@@ -53,4 +61,4 @@ exports.ctrl = ['$scope', 'parseSrv', '$stateParams', '$timeout', '$state', func
 
 
 
-}];
+};

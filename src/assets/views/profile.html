@@ -1,16 +1,19 @@
 <div class="container">
     <div class="panel panel-default">
         <div class="panel-heading">Profile
-            <span ng-hide="!statusSaving" class="badge">{{status.saving}}</span>
+            <span ng-show="state.saving!=''" class="badge">{{state.saving}}</span>
         </div>
         <div class="panel-body">
             <uib-tabset>
                 <uib-tab heading="General">
                     <div ng-include="'partials/profile-general.html'"></div>
                 </uib-tab>
+                
+                <!--
                 <uib-tab heading="Account details">
                     <div ng-include="'partials/profile-details.html'"></div>
                 </uib-tab>
+                -->
             </uib-tabset>
         </div>
     </div>

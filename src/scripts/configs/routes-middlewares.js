@@ -32,7 +32,7 @@ var middlewares = {
                 middlewares[k]($state, $timeout, parse);
             });
         }
-        return ['$state', '$timeout', 'parseSrv', middleware];
+        return ['$state', '$timeout', 'parse', middleware];
     }
 };
 exports.middlewares = middlewares;
