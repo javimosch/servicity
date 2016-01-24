@@ -1,33 +1,36 @@
-<div class="panel panel-default" ng-controller="services as vm">
-    <!-- Default panel contents -->
-    <div class="panel-heading">Servicios
-        <span ng-show="state.loading!=''" class="badge">{{state.loading}}</span>
-    </div>
-    <div class="panel-body">
-         <div class="btn-group" role="group" aria-label="...">
-            <button ng-click="vm.onNew()" type="button" class="btn btn-default">New</button>
-            <button ng-click="vm.onDelete()" type="button" class="btn btn-default">Delete</button>
+<div class="container">
+    <div class="panel panel-default" ng-controller="services as vm">
+        <div class="container-fluid">
+            <div class="panel-heading">Servicios
+                <span ng-show="state.loading!=''" class="badge">{{state.loading}}</span>
+            </div>
+            <div class="panel-body">
+                <div class="btn-group" role="group" aria-label="...">
+                    <button ng-click="vm.onNew()" type="button" class="btn btn-default">New</button>
+                    <button ng-click="vm.onDelete()" type="button" class="btn btn-default">Delete</button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <table class="table">
+                <tr>
+                    <th>Description</th>
+                    <th>Price</th>
+                </tr>
+
+                <tr ng-repeat="model in vm.collection" ng-click="vm.onItemTap(model)">
+                    <td ng-hide="true">
+                        {{model.id}}
+                    </td>
+                    <td>
+                        {{model.description}}
+                    </td>
+                    <td>
+                        {{model.price}}
+                    </td>
+                </tr>
+
+            </table>
         </div>
     </div>
-
-    <!-- Table -->
-    <table class="table">
-        <tr>
-            <th>Description</th>
-            <th>Price</th>
-        </tr>
-
-        <tr ng-repeat="model in vm.collection" ng-click="vm.onItemTap(model)">
-            <td ng-hide="true">
-                {{model.id}}
-            </td>
-            <td>
-                {{model.description}}
-            </td>
-            <td>
-                {{model.price}}
-            </td>
-        </tr>
-        
-  </table>
 </div>

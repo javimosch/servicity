@@ -1,19 +1,23 @@
-<div class="panel panel-default" ng-controller="serviceEdit as vm">
-    <div class="panel-heading">Servicio {{vm.model.description}}
-        
-        <span ng-show="state.saving!=''" class="badge">{{state.saving}}</span>
-        <span ng-show="state.loading!=''" class="badge">{{state.loading}}</span>
-        <span ng-show="state.deleting!=''" class="badge">{{state.deleting}}</span>
-        
-    </div>
-    <div class="panel-body">
-        <div class="btn-group" role="group" aria-label="...">
-            <button ng-disabled="!unsaved()" ng-click="onSave()" type="button" class="btn btn-default">Save</button>
-            <button ng-disabled="unsaved()" ng-click="onDelete()" type="button" class="btn btn-default">Delete</button>
-            <button ng-click="onReturnClick()" type="button" class="btn btn-default">{{getReturnLabel()}}</button>
+<div class="container">
+    <div class="panel panel-default" ng-controller="serviceEdit as vm">
+        <div class="container-fluid">
+            <div class="panel-heading">Servicio {{vm.model.description}}
+
+                <span ng-show="state.saving!=''" class="badge">{{state.saving}}</span>
+                <span ng-show="state.loading!=''" class="badge">{{state.loading}}</span>
+                <span ng-show="state.deleting!=''" class="badge">{{state.deleting}}</span>
+
+            </div>
+            <div class="panel-body">
+                <div class="btn-group" role="group" aria-label="...">
+                    <button ng-disabled="!unsaved()" ng-click="onSave()" type="button" class="btn btn-default">Save</button>
+                    <button ng-disabled="unsaved()" ng-click="onDelete()" type="button" class="btn btn-default">Delete</button>
+                    <button ng-click="onReturnClick()" type="button" class="btn btn-default">{{getReturnLabel()}}</button>
+                </div>
+            </div>
+            <form name="vm.form" novalidate>
+                <formly-form model="vm.model" fields="vm.fields"></formly-form>
+            </form>
         </div>
     </div>
-    <form name="vm.form" novalidate>
-        <formly-form model="vm.model" fields="vm.fields"></formly-form>
-    </form>
 </div>

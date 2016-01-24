@@ -15,10 +15,21 @@ var minify = require('gulp-minify');
 var uglify = require('gulp-uglify');
 var rename = require("gulp-rename");
 var clean = require('gulp-clean');
+var jade = require('gulp-jade');
+var data = require('gulp-data');
+var _ = require('lodash');
+
+
+var jadeLocals = {
+    self: {
+        root: '/'
+    }
+};
 
 var isProduction = false;
 
-
+//expand watch limit (linux)
+//echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
 // Input file.
 watchify.args.debug = true;
@@ -32,24 +43,48 @@ scriptsBundler.transform(babelify.configure({
 
 
 
-
 var tasks = {
-    watchAssets: function () {
-        watch(['src/assets/**/*.*'], function () {
+    watchAssets: function() {
+        watch(['src/assets/**/*.*', '!src/assets/**/*.png', '!src/assets/**/*.jade'], function() {
             gulp.run('build:assets');
         });
+        watch(['src/assets/**/*.jade', 'src/assets/**/*.html','src/assets/**/*.json'], function() {
+            gulp.run('build:jade');
+        });
     },
-    moveAssets: function () {
-        return gulp.src('src/assets/**')
+    moveAssets: function() {
+        return gulp.src(['src/assets/**', '!src/assets/**/*.jade', '!src/**/_*.*'])
             .pipe(gulp.dest('dist'))
-            .pipe(gulpif(!isProduction, browserSync.stream({ once: true })));
+            .pipe(gulpif(!isProduction, browserSync.stream({
+                once: true
+            })));
     },
-    watchStyles: function () {
-        watch(['src/styles/**/*.*'], function () {
+    compileJade: function() {
+        gulp.src('src/assets/**/index.jade')
+            .pipe(data(function(file, cb) {
+                var path = file.path.replace('index.jade', '') + '_data.json';
+                if(require.cache[path]){
+                    delete require.cache[path];
+                }
+                cb(undefined,_.extend(require(path), jadeLocals));
+            }))
+            .pipe(jade())
+            .on('error', function(err) {
+                gutil.log(err.message);
+                browserSync.notify("Jade Error!");
+                this.end();
+            })
+            .pipe(gulp.dest('dist'))
+            .pipe(gulpif(!isProduction, browserSync.stream({
+                once: true
+            })));
+    },
+    watchStyles: function() {
+        watch(['src/styles/**/*.*'], function() {
             gulp.run('build:styles');
         });
     },
-    compileStyles: function () {
+    compileStyles: function() {
         return gulp.src('src/styles/app.scss')
             .pipe(sass({
                 includePaths: [
@@ -57,12 +92,14 @@ var tasks = {
                 ]
             }))
             .pipe(gulp.dest('dist'))
-            .pipe(gulpif(!isProduction, browserSync.stream({ once: true })));
+            .pipe(gulpif(!isProduction, browserSync.stream({
+                once: true
+            })));
     },
-    compileVendorScripts: function () {
+    compileVendorScripts: function() {
         gutil.log('Compiling JS... (Vendor)');
         return vendorBundler.bundle()
-            .on('error', function (err) {
+            .on('error', function(err) {
                 gutil.log(err.message);
                 browserSync.notify("Browserify Error!");
                 this.emit("end");
@@ -70,27 +107,33 @@ var tasks = {
             .pipe(exorcist('dist/vendor.js.map'))
             .pipe(source('vendor.js'))
             .pipe(gulp.dest('./dist'))
-            .pipe(gulpif(!isProduction, browserSync.stream({ once: true })));
+            .pipe(gulpif(!isProduction, browserSync.stream({
+                once: true
+            })));
     },
-    compileScripts: function () {
+    compileScripts: function() {
         gutil.log('Compiling JS...');
         return scriptsBundler.bundle()
-            .on('error', function (err) {
+            .on('error', function(err) {
                 gutil.log(err.message);
                 browserSync.notify("Browserify Error!");
                 this.emit("end");
             })
-        //.pipe(gulpif(isProduction, uglify()))
+            //.pipe(gulpif(isProduction, uglify()))
             .pipe(gulpif(isProduction, minify()))
             .pipe(exorcist('dist/app.js.map'))
             .pipe(source('app.js'))
             .pipe(gulp.dest('./dist'))
-            .pipe(gulpif(!isProduction, browserSync.stream({ once: true })));
+            .pipe(gulpif(!isProduction, browserSync.stream({
+                once: true
+            })));
     },
-    buildDev: function (cb) {
-        runSequence('clean', 'build:vendor', 'build:scripts', 'build:assets', 'build:styles', function () { cb() });
+    buildDev: function(cb) {
+        runSequence('clean', 'build:vendor', 'build:scripts', 'build:assets', 'build:jade', 'build:styles', function() {
+            cb();
+        });
     },
-    buildProdScripts: function () {
+    buildProdScripts: function() {
         return gulp.src('src/scripts/app.js')
             .pipe(browserify({
                 insertGlobals: true,
@@ -103,38 +146,38 @@ var tasks = {
             .pipe(rename('app.js'))
             .pipe(gulp.dest('dist'));
     },
-    buildProdVendor: function () {
+    buildProdVendor: function() {
         return gulp.src('src/vendor/vendor.js')
             .pipe(browserify({
                 insertGlobals: true,
                 debug: !isProduction
             }))
             .pipe(gulpif(!isProduction, sourcemaps.init()))
-        //.pipe(gulpif(isProduction, uglify()))
-        //.pipe(gulpif(isProduction, minify()))
+            //.pipe(gulpif(isProduction, uglify()))
+            //.pipe(gulpif(isProduction, minify()))
             .pipe(gulpif(!isProduction, sourcemaps.write()))
             .pipe(rename('vendor.js'))
             .pipe(gulp.dest('dist'));
     },
-    buildProd: function () {
+    buildProd: function() {
         isProduction = true;
-        return runSequence('clean', 'build-prod:vendor', 'build-prod:scripts', 'build:assets', 'build:styles', function () { });
+        return runSequence('clean', 'build-prod:vendor', 'build-prod:scripts', 'build:assets', 'build:jade', 'build:styles', function() {});
     },
-    clean: function () {
+    clean: function() {
         return gulp.src('dist', {
-            read: false
-        })
+                read: false
+            })
             .pipe(clean({
                 force: true
             }));
     },
-    watch: function () {
+    watch: function() {
         return runSequence('build-dev', 'watch:assets', 'watch:styles', 'server');
     },
-    server: function () {
+    server: function() {
         browserSync.init({
             server: "./dist",
-            port: 3333,
+            port: 3334,
             open: false
         });
     }
@@ -148,6 +191,7 @@ gulp.task('build:scripts', tasks.compileScripts);
 gulp.task('watch:styles', tasks.watchStyles);
 gulp.task('build:styles', tasks.compileStyles);
 gulp.task('watch:assets', tasks.watchAssets);
+gulp.task('build:jade', tasks.compileJade);
 gulp.task('build:assets', tasks.moveAssets);
 gulp.task('build:scripts', tasks.compileScripts);
 gulp.task('build:vendor', tasks.compileVendorScripts);
@@ -157,6 +201,6 @@ gulp.task('build-prod', tasks.buildProd);
 gulp.task('build-prod:scripts', tasks.buildProdScripts);
 gulp.task('build-prod:vendor', tasks.buildProdVendor);
 gulp.task('clean', tasks.clean);
-gulp.task('watch',tasks.watch);
-gulp.task('server',tasks.server);
+gulp.task('watch', tasks.watch);
+gulp.task('server', tasks.server);
 gulp.task('default', tasks.watch);

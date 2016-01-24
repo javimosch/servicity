@@ -31,7 +31,7 @@ var services =
                 c.services = parse.Data(r, columns);
                 $timeout(() => $scope.$apply());
             });
-        
+
         c.select = (index) => {
             if (index.toString() === '+1') {
                 c.active++;
@@ -75,7 +75,7 @@ var general =
 var details =
     function ($scope, parse, $stateParams, $timeout, $state, $rootScope) {//injects
         var root = $rootScope;
-        var vm = $scope;
+        var vm = this;
         vm.model = {};
         vm.fields = [
             {
@@ -122,15 +122,15 @@ var details =
             }
         ];
 
-        /*
-                Parse.User.current().fetch().then((r) => {
-                    vm.model = Object.assign(parse.Data([r], ['username'
-                        , 'email', 'lastName', 'firstName'])[0], {
-                            password: '123456'
-                        });
-                    vm.original = _.clone(vm.model);
+
+        Parse.User.current().fetch().then((r) => {
+            vm.model = Object.assign(parse.Data([r], ['username'
+                , 'email', 'lastName', 'firstName'])[0], {
+                    password: '123456'
                 });
-        */
+            vm.original = _.clone(vm.model);
+        });
+
 
         vm.changed = () => {
             if (!vm.original) return false;

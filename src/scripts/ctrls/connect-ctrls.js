@@ -59,6 +59,6 @@ var connect =
         });
     };
 
-
+    $timeout(() => $scope.$apply(),2000);
 
 };
