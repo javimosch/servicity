@@ -18,7 +18,19 @@ var clean = require('gulp-clean');
 var jade = require('gulp-jade');
 var data = require('gulp-data');
 var _ = require('lodash');
+var ftp = require( 'vinyl-ftp' );
 
+var appName = 'servicity';
+var ftpOptions =  {
+    host:     'misitioba.com',
+    user:     'gulp@misitioba.com',
+    password: '123456',
+    parallel: 10,
+    log:      "gutil.log"
+};
+var ftpSrc = [
+    'dist/**/*.*'
+];
 
 var jadeLocals = {
     self: {
@@ -180,6 +192,18 @@ var tasks = {
             port: 3334,
             open: false
         });
+    },
+    deploy:function () {
+        var conn = ftp.create(ftpOptions );
+        
+        return gulp.src( ftpSrc, { base: '.', buffer: false } )
+        .pipe(rename(function (path) {
+            path.dirname = path.dirname.toString().replace("dist","");
+        return path;
+      }))
+            .pipe( conn.newer( '/'+appName ) ) // only upload newer files
+            .pipe( conn.dest( '/'+appName ) );
+    
     }
 };
 
@@ -203,4 +227,11 @@ gulp.task('build-prod:vendor', tasks.buildProdVendor);
 gulp.task('clean', tasks.clean);
 gulp.task('watch', tasks.watch);
 gulp.task('server', tasks.server);
+gulp.task( 'deploy', tasks.deploy );
 gulp.task('default', tasks.watch);
+
+
+
+
+
+    
